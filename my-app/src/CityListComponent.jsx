@@ -4,20 +4,6 @@ import TextField from '@mui/material/TextField';
 import Autocomplete from '@mui/material/Autocomplete';
 import axios from 'axios';
 
-
-const CityListData = [
-    'London',
-    'The Godfather',
-    'The Godfather: Part II',
-    'The Dark Knight',
-    '12 Angry Men',
-    "Schindler's List",
-    'Pulp Fiction',
-    'The Lord of the Rings: The Return of the King'
-]
-
-
-
 const CityListComponent = () => {
     const [cities, setCities] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -25,13 +11,13 @@ const CityListComponent = () => {
     useEffect(() => {
         axios.get('https://countriesnow.space/api/v0.1/countries')
             .then(response => {
-                let data =[];
+                let data = [];
 
-                 response.data.data
-                 .map(x => x.cities)
-                 .slice(0, 5)
-                 .forEach((item, index) => {
-                    item.map(x =>data.push(x));            
+                response.data.data
+                    .map(x => x.cities)
+                    .slice(0, 5)
+                    .forEach((item, index) => {
+                        item.map(x => data.push(x));
                     });;
 
                 setCities(data);
@@ -54,7 +40,7 @@ const CityListComponent = () => {
             />
         );
     }
-    
+
     const RenderCityListTo = () => {
         return (
             <Autocomplete

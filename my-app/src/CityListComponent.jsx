@@ -6,7 +6,6 @@ import axios from 'axios';
 
 const CityListComponent = () => {
     const [cities, setCities] = useState([]);
-    const [loading, setLoading] = useState(true);
 
     useEffect(() => {
         axios.get('https://countriesnow.space/api/v0.1/countries')
@@ -16,16 +15,14 @@ const CityListComponent = () => {
                 response.data.data
                     .map(x => x.cities)
                     .slice(0, 5)
-                    .forEach((item, index) => {
+                    .forEach((item) => {
                         item.map(x => data.push(x));
                     });;
 
                 setCities(data);
-                setLoading(false);
             })
             .catch(error => {
                 console.error('Error fetching data:', error);
-                setLoading(false);
             });
     }, []);
 

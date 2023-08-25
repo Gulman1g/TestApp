@@ -5,9 +5,19 @@ import Autocomplete from '@mui/material/Autocomplete';
 import axios from 'axios';
 import DateComponent from './datepicket';
 import Button from '@mui/material/Button';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+import dayjs from "dayjs";
+
 
 const CityListComponent = () => {
     const [cities, setCities] = useState([]);
+    const [isDataListRender, setisDataListRender] = useState(false);
+    const [cityFrom, setcityFrom] = useState('');
+    const [cityTo, setcityTo] = useState('');
+    const [dateFly, setdateFly] = useState('')
+
 
     useEffect(() => {
         axios.get('https://countriesnow.space/api/v0.1/countries')
@@ -28,12 +38,34 @@ const CityListComponent = () => {
             });
     }, []);
 
+    const OnFindFlyClick = () => {
+        setisDataListRender(!isDataListRender);
+        console.log('cityFrom ' + cityFrom + 'cityTo ' + cityTo + 'dateFly ' + dateFly);
+    }
+
+    const OnCityFromChange = (event, value) => {
+        setcityFrom(value);
+        console.log('OnCityFromChange ' + value);
+    }
+
+    const OnCityToChange = (event, value) => {
+        setcityTo(value);
+        console.log('OnCityToChange ' + value);
+    }
+
+    const onDateFlyChange = (value) => {
+        let date = value.$d.toDateString();
+        setdateFly(date);
+        console.log('onDateFlyChange ');
+    }
+
     const RenderCityListFrom = () => {
         return (
             <Autocomplete
                 disablePortal
                 id="combo-box-demo"
                 options={cities}
+                onChange={OnCityFromChange}
                 sx={{ width: 300 }}
                 renderInput={(params) => <TextField {...params} label="City From" />}
             />
@@ -46,11 +78,19 @@ const CityListComponent = () => {
                 disablePortal
                 id="combo-box-demo"
                 options={cities}
+                onChange={OnCityToChange}
                 sx={{ width: 300 }}
                 renderInput={(params) => <TextField {...params} label="City To" />}
             />
         );
     }
+
+    const RenderDataList = () => {
+        return isDataListRender && (
+            <Button variant="contained">Datalist</Button>
+        )
+    }
+
 
     return (
         <div>
@@ -67,15 +107,18 @@ const CityListComponent = () => {
                             {RenderCityListTo()}
                         </Grid>
                         <Grid item xs={3.5}>
-                            <DateComponent />
+                            <LocalizationProvider dateAdapter={AdapterDayjs}>
+                                <DatePicker defaultValue={dayjs()} 
+                                 onChange={(newValue) => onDateFlyChange(newValue)}/>
+                            </LocalizationProvider>
                         </Grid>
                         <Grid item xs={1.5}>
-                        <Button variant="contained">Find fly</Button>
-                            </Grid>
+                            <Button variant="contained" onClick={OnFindFlyClick}>Find fly</Button>
+                        </Grid>
                     </Grid>
                 </Grid>
                 <Grid item xs={12}>
-                    DataList
+                    {RenderDataList()}
                 </Grid>
             </Grid>
         </div>

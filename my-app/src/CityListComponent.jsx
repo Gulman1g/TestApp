@@ -9,7 +9,38 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import dayjs from "dayjs";
+import Table from '@mui/material/Table'
 
+const FlyingTabel = [
+    {field: "id", headerName: "ID"},
+    {field: "title", headerName: "Name"},
+    {field: "price", headerName: "Price"},
+    {field: "date", headerName: "Date/Time", type:['dateColumn', 'nonEditableColumn'] },
+];
+
+const DataTable = () => {
+    const [tableData, setTableData] = useState([]);
+    const [rows, setRows] = useState(tableData);
+
+    useEffect(() => {
+        axios.get("")
+        .then((response) => response.json())
+        .then((data) => setTableData(data))
+    }, []);
+    
+        return (
+            <>
+                rows={tableData}
+                columns={FlyingTabel}
+                pageSize={13}
+                initialState={{
+                    ...tableData.initialState,
+                    pagination: { paginationModel: { pageSize: 10 } },
+                }}
+                checkboxSelection
+                </>
+        );
+}
 
 const CityListComponent = () => {
     const [cities, setCities] = useState([]);
@@ -87,7 +118,7 @@ const CityListComponent = () => {
 
     const RenderDataList = () => {
         return isDataListRender && (
-            <Button variant="contained">Datalist</Button>
+            <Button variant="contained">DataTable</Button>
         )
     }
 
